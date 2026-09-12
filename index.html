@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WellCare AI — Health &amp; Wellness Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F6FAF9;
+    --ink: #10302D;
+    --ink-soft: #4A625F;
+    --teal: #0E6E68;
+    --teal-deep: #0A4F4B;
+    --teal-tint: #E4F1EF;
+    --amber: #DC9A3C;
+    --card-border: #DCEAE7;
+    --white: #FFFFFF;
+    --radius-card: 14px;
+    --radius-pill: 999px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 500;
+    margin: 0;
+    color: var(--teal-deep);
+  }
+  a{ color: inherit; }
+  img,svg{ display:block; }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--card-border);
+    background: var(--white);
+    position: sticky;
+    top:0;
+    z-index: 20;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Source Serif 4', serif;
+    font-size: 1.15rem;
+    color: var(--teal-deep);
+  }
+  .brand .mark{
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(160deg, var(--teal), var(--teal-deep));
+    position: relative;
+  }
+  .brand .mark::after{
+    content:"";
+    position:absolute; inset: 8px;
+    border-radius: 3px;
+    background: var(--white);
+    opacity:.85;
+  }
+  nav{ display:flex; gap: 28px; font-size: .93rem; color: var(--ink-soft); }
+  nav a{ text-decoration:none; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: border-color .15s ease, color .15s ease; }
+  nav a.active, nav a:hover{ color: var(--teal-deep); border-color: var(--amber); }
+  .nav-icons{ display:flex; gap:16px; color: var(--ink-soft); }
+  @media (max-width: 760px){ nav{ display:none; } }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 28px 40px;
+    display:grid;
+    grid-template-columns: 1.1fr 0.6fr;
+    gap: 40px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .hero p{
+    margin-top: 16px;
+    max-width: 46ch;
+    color: var(--ink-soft);
+    font-size: 1.03rem;
+    line-height: 1.6;
+  }
+  .cta-row{ display:flex; gap:14px; margin-top: 26px; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary{
+    font-family:'Inter'; font-size: .95rem; font-weight: 600;
+    padding: 13px 24px;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{
+    background: var(--teal-deep);
+    color: var(--white);
+    box-shadow: 0 6px 18px rgba(10,79,75,.25);
+  }
+  .btn-primary:hover{ background: var(--teal); transform: translateY(-1px); }
+  .btn-secondary{
+    background: transparent;
+    color: var(--teal-deep);
+    border: 1.5px solid var(--card-border);
+  }
+  .btn-secondary:hover{ border-color: var(--teal); }
+
+  .hero-visual{
+    position: relative;
+    height: 260px;
+  }
+  .pulse-shape{
+    position:absolute;
+    border-radius: 50%;
+    filter: blur(0px);
+  }
+  .pulse-shape.one{
+    width: 190px; height: 190px;
+    background: radial-gradient(circle at 30% 30%, #E9B978, var(--amber));
+    top: 10px; right: 40px;
+    opacity: .9;
+  }
+  .pulse-shape.two{
+    width: 130px; height: 130px;
+    background: radial-gradient(circle at 35% 30%, #4FBDB4, var(--teal));
+    bottom: 0; right: 130px;
+  }
+  .hero-visual svg{ position:absolute; inset:0; width:100%; height:100%; }
+
+  /* ---------- Concerns section ---------- */
+  .concerns{
+    max-width: 1180px;
+    margin: 20px auto 10px;
+    padding: 30px 28px 10px;
+  }
+  .concerns-head{
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .concerns-head h2{ font-size: 1.55rem; }
+  .concerns-head p{ color: var(--ink-soft); font-size: .95rem; max-width: 40ch; margin:0; }
+
+  .concern-track{
+    display:flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    scroll-snap-type: x proximity;
+  }
+  .concern-track::-webkit-scrollbar{ height: 6px; }
+  .concern-track::-webkit-scrollbar-thumb{ background: var(--card-border); border-radius: 4px; }
+
+  .concern-card{
+    flex: 0 0 240px;
+    scroll-snap-align: start;
+    background: var(--white);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    padding: 20px;
+    display:flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .concern-card:hover{ border-color: var(--teal); transform: translateY(-2px); }
+  .concern-icon{
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--teal-tint);
+    color: var(--teal-deep);
+  }
+  .concern-card h3{ font-size: 1.02rem; color: var(--ink); font-weight: 600; font-family:'Inter'; }
+  .concern-card p{
+    margin:0; font-size: .87rem; color: var(--ink-soft); line-height: 1.5; flex-grow:1;
+  }
+  .ask-ai{
+    align-self:flex-start;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--teal-deep);
+    background: var(--teal-tint);
+    border: none;
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .ask-ai:hover{ background: #CFE7E3; }
+
+  /* ---------- Chat panel ---------- */
+  .chat-wrap{
+    max-width: 1180px;
+    margin: 30px auto 70px;
+    padding: 0 28px;
+  }
+  .chat-panel{
+    background: var(--white);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    overflow:hidden;
+    max-width: 480px;
+    box-shadow: 0 12px 30px rgba(16,48,45,.06);
+  }
+  .chat-head{
+    background: var(--teal-deep);
+    color: var(--white);
+    padding: 16px 20px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .chat-head .dot{
+    width: 26px; height:26px; border-radius:50%;
+    background: rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:center;
+    font-size: .8rem;
+  }
+  .chat-head strong{ font-family:'Source Serif 4'; font-weight:500; font-size: 1rem; }
+  .chat-head span{ display:block; font-size: .75rem; opacity:.8; }
+
+  .chat-body{ padding: 22px 20px 6px; }
+  .chat-body .lead{ font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; }
+  .chat-body .sub{ color: var(--ink-soft); font-size: .88rem; margin-bottom: 18px; }
+
+  .disclaimer{
+    display:flex; gap: 8px;
+    background: #FBF3E5;
+    border: 1px solid #EFDCB3;
+    color: #7A5A1E;
+    font-size: .78rem;
+    line-height: 1.45;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .messages{
+    display:flex; flex-direction: column; gap: 10px;
+    max-height: 220px; overflow-y:auto;
+    margin-bottom: 14px;
+  }
+  .msg{
+    max-width: 82%;
+    padding: 10px 13px;
+    border-radius: 12px;
+    font-size: .88rem;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+  .msg.bot{ background: var(--teal-tint); color: var(--ink); align-self:flex-start; border-bottom-left-radius: 3px; }
+  .msg.user{ background: var(--teal-deep); color: var(--white); align-self:flex-end; border-bottom-right-radius: 3px; }
+
+  .chat-input{
+    display:flex; gap: 10px;
+    padding: 14px 20px 20px;
+    border-top: 1px solid var(--card-border);
+  }
+  .chat-input textarea{
+    flex:1;
+    resize:none;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-family:'Inter';
+    font-size: .9rem;
+    min-height: 42px;
+    max-height: 90px;
+    color: var(--ink);
+  }
+  .chat-input textarea:focus{ outline: 2px solid var(--teal); outline-offset: 1px; }
+  .send-btn{
+    background: var(--teal-deep);
+    color: var(--white);
+    border:none;
+    border-radius: 10px;
+    padding: 0 18px;
+    font-weight: 600;
+    font-size: .88rem;
+    cursor:pointer;
+  }
+  .send-btn:hover{ background: var(--teal); }
+
+  footer{
+    text-align:center;
+    font-size: .78rem;
+    color: var(--ink-soft);
+    padding: 20px;
+  }
+
+  @media (max-width: 760px){
+    .hero{ grid-template-columns: 1fr; }
+    .hero-visual{ display:none; }
+    .chat-panel{ max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><span class="mark"></span> WellCare AI</div>
+  <nav>
+    <a href="#home" class="active">Home</a>
+    <a href="#assistant">AI Assistant</a>
+    <a href="#concerns">Health &amp; Wellness</a>
+  </nav>
+  <div class="nav-icons">
+    <span title="Search">⌕</span>
+    <span title="Saved">☆</span>
+    <span title="Account">◍</span>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <div>
+    <h1>Your personal AI health &amp; wellness assistant</h1>
+    <p>Describe your health concerns — stress, sleep, mood, or a personal problem. Our assistant helps you understand possible causes, notice warning signs, and find simple wellness guidance.</p>
+    <div class="cta-row">
+      <button class="btn-primary" id="talkBtn">Talk to AI Assistant</button>
+      <button class="btn-secondary" onclick="document.getElementById('concerns').scrollIntoView({behavior:'smooth'})">Browse common concerns</button>
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="pulse-shape one"></div>
+    <div class="pulse-shape two"></div>
+    <svg viewBox="0 0 200 120">
+      <polyline points="0,80 40,80 55,40 70,100 85,60 100,80 200,80"
+        fill="none" stroke="#0A4F4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+    </svg>
+  </div>
+</section>
+
+<section class="concerns" id="concerns">
+  <div class="concerns-head">
+    <h2>Common health &amp; wellness concerns</h2>
+    <p>Learn about common health problems and simple ways to take care of yourself.</p>
+  </div>
+
+  <div class="concern-track">
+
+    <article class="concern-card">
+      <div class="concern-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a5 5 0 0 0-5 5c0 3 2 4 2 7a3 3 0 0 0 6 0c0-3 2-4 2-7a5 5 0 0 0-5-5z"/></svg>
+      </div>
+      <h3>Stress &amp; anxiety</h3>
+      <p>Stress may affect sleep, concentration, mood, and physical comfort.</p>
+      <button class="ask-ai" data-topic="stress and anxiety">Ask AI →</button>
+    </article>
+
+    <article class="concern-card">
+      <div class="concern-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M12 7v5l3 2"/></svg>
+      </div>
+      <h3>Poor sleep</h3>
+      <p>Irregular sleep can affect energy, concentration, and memory.</p>
+      <button class="ask-ai" data-topic="poor sleep">Ask AI →</button>
+    </article>
+
+    <article class="concern-card">
+      <div class="concern-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      </div>
+      <h3>Headache</h3>
+      <p>Headaches can have many causes, including dehydration, stress, and lack of sleep.</p>
+      <button class="ask-ai" data-topic="headache">Ask AI →</button>
+    </article>
+
+    <article class="concern-card">
+      <div class="concern-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+      </div>
+      <h3>Fatigue</h3>
+      <p>Low energy can be associated with sleep, lifestyle, nutrition, or illness.</p>
+      <button class="ask-ai" data-topic="fatigue">Ask AI →</button>
+    </article>
+
+    <article class="concern-card">
+      <div class="concern-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3c2 3 5 6 5 10a5 5 0 0 1-10 0c0-4 3-7 5-10z"/></svg>
+      </div>
+      <h3>Digestive problems</h3>
+      <p>Bloating, nausea, and stomach discomfort can have several possible causes.</p>
+      <button class="ask-ai" data-topic="digestive problems">Ask AI →</button>
+    </article>
+
+    <article class="concern-card">
+      <div class="concern-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 8.6c0 5-8.8 10.4-8.8 10.4S3.2 13.6 3.2 8.6a4.8 4.8 0 0 1 8.8-2.7 4.8 4.8 0 0 1 8.8 2.7z"/></svg>
+      </div>
+      <h3>Low mood</h3>
+      <p>Persistent changes in mood can affect everyday routines and wellbeing.</p>
+      <button class="ask-ai" data-topic="low mood">Ask AI →</button>
+    </article>
+
+  </div>
+</section>
+
+<section class="chat-wrap" id="assistant">
+  <div class="chat-panel">
+    <div class="chat-head">
+      <span class="dot">✦</span>
+      <div>
+        <strong>WellCare AI</strong>
+        <span>Supportive health and wellness assistant</span>
+      </div>
+    </div>
+    <div class="chat-body">
+      <p class="lead">AI health &amp; welfare assistant</p>
+      <p class="sub">Tell me what you're experiencing.</p>
+
+      <div class="disclaimer">
+        ⚠ This AI assistant is not a doctor and cannot provide a medical diagnosis. It provides general health information and risk awareness. If symptoms are persistent or worsening, seek appropriate professional medical care.
+      </div>
+
+      <div class="messages" id="messages">
+        <div class="msg bot">How can I help you today? You can tell me about a health problem, sudden or recurring, self-reported symptoms, stress, sleep, mood, or another concern.</div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <textarea id="chatInput" placeholder="Describe how you are feeling..."></textarea>
+      <button class="send-btn" id="sendBtn">Send</button>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 WellCare AI. AI Health, Stress &amp; Wellness Assistant.</footer>
+
+<script>
+  const messages = document.getElementById('messages');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const talkBtn = document.getElementById('talkBtn');
+
+  // Point this at your running FastAPI server
+  const API_BASE = "http://localhost:8000";
+
+  function addMessage(text, sender){
+    const div = document.createElement('div');
+    div.className = 'msg ' + sender;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function addLoadingMessage(){
+    const div = document.createElement('div');
+    div.className = 'msg bot';
+    div.id = 'loadingMsg';
+    div.textContent = 'Checking possible conditions…';
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function removeLoadingMessage(){
+    const el = document.getElementById('loadingMsg');
+    if(el) el.remove();
+  }
+
+  async function handleSend(customText){
+    const text = (customText || input.value).trim();
+    if(!text) return;
+    addMessage(text, 'user');
+    input.value = '';
+    document.getElementById('assistant').scrollIntoView({behavior:'smooth', block:'center'});
+
+    // Split free text into rough symptom terms — commas or "and"
+    const symptoms = text
+      .toLowerCase()
+      .split(/,| and /)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    addLoadingMessage();
+
+    try {
+      const res = await fetch(`${API_BASE}/check-symptoms`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symptoms })
+      });
+
+      if(!res.ok) throw new Error(`Server responded ${res.status}`);
+      const data = await res.json();
+      removeLoadingMessage();
+
+      if(!data.results || data.results.length === 0){
+        addMessage("I couldn't match that to anything in the database yet. Could you describe it differently?", 'bot');
+        return;
+      }
+
+      const top = data.results.slice(0, 3)
+        .map(r => `• ${r.disease}${r.description ? " — " + r.description : ""}`)
+        .join('\n');
+
+      addMessage(`${data.message}\n\n${top}`, 'bot');
+    } catch (err) {
+      removeLoadingMessage();
+      addMessage("I couldn't reach the assistant service right now. Please try again shortly.", 'bot');
+      console.error(err);
+    }
+  }
+
+  sendBtn.addEventListener('click', () => handleSend());
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); handleSend(); }
+  });
+
+  document.querySelectorAll('.ask-ai').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const topic = btn.getAttribute('data-topic');
+      handleSend("I've been experiencing " + topic + ".");
+    });
+  });
+
+  talkBtn.addEventListener('click', () => {
+    document.getElementById('assistant').scrollIntoView({behavior:'smooth'});
+    input.focus();
+  });
+</script>
+
+</body>
+</html>
