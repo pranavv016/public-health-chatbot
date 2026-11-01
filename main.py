@@ -13,9 +13,15 @@ from sklearn.metrics.pairwise import cosine_similarity
 # -----------------------------------------------------------------------------
 # Configuration
 # -----------------------------------------------------------------------------
-# In Colab, keep the downloaded folders here:
-# /content/wellcare_data/dataset1/ and /content/wellcare_data/dataset2/
-DATA_DIR = Path(os.getenv("WELLCARE_DATA_DIR", "/content/wellcare_data"))
+# Use Colab's dataset folder during development.
+# On Render, use the data folder included with this project.
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_DATA_DIR = (
+    Path("/content/wellcare_data")
+    if Path("/content/wellcare_data").exists()
+    else BASE_DIR / "data"
+)
+DATA_DIR = Path(os.getenv("WELLCARE_DATA_DIR", str(DEFAULT_DATA_DIR)))
 
 app = FastAPI(
     title="WellCare AI API",
@@ -23,11 +29,19 @@ app = FastAPI(
     version="2.0.0",
 )
 
-# For development this allows GitHub Pages and localhost to call the API.
-# Before production, replace ["*"] with your exact frontend origin.
+# Allow the GitHub Pages frontend and optional local development origins.
+FRONTEND_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "FRONTEND_ORIGINS",
+        "https://pranavv016.github.io,http://localhost:8000,http://127.0.0.1:5500"
+    ).split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=FRONTEND_ORIGINS,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
