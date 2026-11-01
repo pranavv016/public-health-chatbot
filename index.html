@@ -464,7 +464,7 @@ const talkBtn=document.getElementById('talkBtn');
 
 // Replace with your deployed FastAPI backend URL.
 // For local testing only, use "http://localhost:8000".
-const API_BASE="PASTE_YOUR_DEPLOYED_BACKEND_URL_HERE";
+const API_BASE="https://wellcare-ai-api.onrender.com";
 
 function addMessage(text,sender){
   const div=document.createElement('div');
@@ -525,7 +525,7 @@ function addResults(data){
 }
 async function handleSend(customText){
   const text=(customText||input.value).trim(); if(!text) return;
-  if(API_BASE.includes('PASTE_YOUR_DEPLOYED_BACKEND_URL_HERE')){
+  if(API_BASE.includes('https://wellcare-ai-api.onrender.com')){
     addMessage('The backend is not connected yet. Set API_BASE in this file to your deployed FastAPI backend URL.', 'bot');
     return;
   }
